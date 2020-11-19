@@ -9,13 +9,15 @@ export interface TSmagicOptions {
   address?: string
 }
 
-export interface TSmagicHost extends Contract, MagicSmockContract {
+export interface TSmagicHost extends Contract, MagicSmockContract {}
 
-}
-
-export const smagicit: Smagicit<TSmagicSpec, TSmagicOptions, TSmagicHost> = async (
+export const smagicit: Smagicit<
+  TSmagicSpec,
+  TSmagicOptions,
+  TSmagicHost
+> = async (
   spec: TSmagicSpec,
-  options: TSmagicOptions = {},
+  options: TSmagicOptions = {}
 ): Promise<TSmagicHost> => {
   return {} as any
 }

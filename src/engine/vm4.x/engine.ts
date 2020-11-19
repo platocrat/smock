@@ -8,32 +8,36 @@ export class VM4xEngine {
     [id: string]: SmockContract | MagicSmockContract
   } = {}
 
-  public attachEVM(
-    evm: any
-  ): void {
+  public attachEVM(evm: any): void {
     if (this.evm) {
       return
     }
 
     this.evm = evm
-    this.ogExecuteCall = this.evm._executeCall.bind(this.evm)
-    this.evm._executeCall = this._hookExecuteCall.bind(this)
+    const hook = this._hookExecuteCall.bind(this)
+    const ogvm = evm.default
+    evm.default = (function () {
+      return function (...args: any) {
+        const subvm = new ogvm(...args)
+        const ogExecuteCall = subvm._executeCall.bind(subvm)
+        subvm._executeCall = async (message: any): Promise<any> => {
+          return hook(ogExecuteCall, message)
+        }
+
+        return subvm
+      }
+    })()
   }
 
   public detatchEVM(): void {
-    this.evm._executeCall = this.ogExecuteCall
     this.evm = undefined
   }
 
-  public attachSmockContract(
-    mock: SmockContract,
-  ): void {
+  public attachSmockContract(mock: SmockContract): void {
     this.smocks[mock.smocked.id] = mock
   }
 
-  public detatchSmockContract(
-    mock: SmockContract | string,
-  ): void {
+  public detatchSmockContract(mock: SmockContract | string): void {
     if (typeof mock === 'string') {
       delete this.smocks[mock]
     } else {
@@ -41,18 +45,9 @@ export class VM4xEngine {
     }
   }
 
-  public attachMagicSmockContract(
-    mock: MagicSmockContract,
-    id: string,
-  ): void {
+  public attachMagicSmockContract(mock: MagicSmockContract, id: string): void {}
 
-  }
-
-  public detatchMagicSmockContract(
-    mock: MagicSmockContract | string,
-  ): void {
-
-  }
+  public detatchMagicSmockContract(mock: MagicSmockContract | string): void {}
 
   private _getSmockByAddress(
     address: string
@@ -65,22 +60,36 @@ export class VM4xEngine {
   }
 
   private async _hookExecuteCall(
+    ogExecuteCall: any,
     message: any
   ): Promise<any> {
-    const address = '0x' + message.to.toString('hex')
-    const smock = this._getSmockByAddress(address)
-    if (smock) {
-      const { resolve, returnValue } = (smock as any)._smockit(message.data)
-      return {
-        gasUsed: new BN(0),
-        execResult: {
+    try {
+      const address = '0x' + message.to.toString('hex')
+      const smock = this._getSmockByAddress(address)
+
+      if (smock) {
+        const { resolve, returnValue } = await (smock as any)._smockit(
+          message.data
+        )
+
+        return {
           gasUsed: new BN(0),
-          returnValue: returnValue,
-          exceptionError: undefined,
+          execResult: {
+            gasUsed: new BN(0),
+            returnValue: returnValue,
+            exceptionError:
+              resolve === 'revert'
+                ? new Error(`Smocked Revert: You meant to do this!`)
+                : undefined,
+          },
         }
       }
-    } else {
-      return this.ogExecuteCall(message)
+    } catch (err) {
+      throw new Error(
+        `Smock: Something went wrong while trying to mock a return value. Here's the error:\n${err}`
+      )
     }
+
+    return ogExecuteCall(message)
   }
 }

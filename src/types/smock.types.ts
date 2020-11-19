@@ -12,7 +12,7 @@ export interface SmockFunction {
   will: {
     return: {
       (): void
-      
+
       with: (...args: any[]) => void
     }
 
@@ -62,15 +62,17 @@ export interface MagicSmockContract {
   }
 }
 
-export type Smockit<TSmockSpec, TSmockOptions, TSmockHost extends SmockContract> = (
-  spec: TSmockSpec,
-  options?: TSmockOptions,
-) => Promise<TSmockHost>
+export type Smockit<
+  TSmockSpec,
+  TSmockOptions,
+  TSmockHost extends SmockContract
+> = (spec: TSmockSpec, options?: TSmockOptions) => Promise<TSmockHost>
 
-export type Smagicit<TSmagicSpec, TSmagicOptions, TSmagicHost extends MagicSmockContract> = (
-  spec: TSmagicSpec,
-  options?: TSmagicOptions,
-) => Promise<TSmagicHost>
+export type Smagicit<
+  TSmagicSpec,
+  TSmagicOptions,
+  TSmagicHost extends MagicSmockContract
+> = (spec: TSmagicSpec, options?: TSmagicOptions) => Promise<TSmagicHost>
 
 export type Smock<
   TSmockSpec,

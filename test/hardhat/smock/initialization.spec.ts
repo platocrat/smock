@@ -18,7 +18,9 @@ describe('[hardhat] smock: initialization tests', () => {
     })
 
     it('should be able to create a SmockContract from an ethers Contract', async () => {
-      const factory = await ethers.getContractFactory('TestHelpers_EmptyContract')
+      const factory = await ethers.getContractFactory(
+        'TestHelpers_EmptyContract'
+      )
 
       const spec = await factory.deploy()
       const mock = await smock(spec)
@@ -27,7 +29,9 @@ describe('[hardhat] smock: initialization tests', () => {
     })
 
     it('should be able to create a SmockContract from an ethers Interface', async () => {
-      const factory = await ethers.getContractFactory('TestHelpers_EmptyContract')
+      const factory = await ethers.getContractFactory(
+        'TestHelpers_EmptyContract'
+      )
 
       const spec = factory.interface
       const mock = await smock(spec)
