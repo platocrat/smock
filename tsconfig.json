@@ -22,6 +22,6 @@
         ]
     },
     "paths": ["src/types/global.d.ts"],
-    "include": ["*.ts", "**/*.ts"],
+    "include": ["*.ts", "**/*.ts", "test/suites/truffle/truffle.config.js", "test/suites/truffle/tests/smock/function-manipulation.spec.js"],
     "exclude": ["./build", "node_modules", "./test"]
 }

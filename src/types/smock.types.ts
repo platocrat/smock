@@ -56,8 +56,14 @@ export interface MagicSmockContract {
       [name: string]: SmockFunction
     }
 
-    variables: {
-      [name: string]: SmockVariable
+    internal: {
+      functions: {
+        [name: string]: SmockFunction
+      }
+
+      variables: {
+        [name: string]: SmockVariable
+      }
     }
   }
 }

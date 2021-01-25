@@ -1,0 +1,125 @@
+{
+  "contractName": "TestHelpers_EmptyContract",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.7.6+commit.7338295f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/kelvinfichter/Projects/smock/test/common/contracts/TestHelpers_EmptyContract.sol\":\"TestHelpers_EmptyContract\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/kelvinfichter/Projects/smock/test/common/contracts/TestHelpers_EmptyContract.sol\":{\"keccak256\":\"0x306f0bd1accf09bc309de9ad8e39baf43ee26bf38d3c673f89456d7f87af5e53\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://4bb0760c7ee351c8ccdea1e245c7935cff5804ca809880968ea5e431ec658ca2\",\"dweb:/ipfs/QmSyKQCTuucZ2NiP2iXntfWZxM3GUwWgXqnnxjaTwBipQw\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea264697066735822122029825150432c5badfdfaa8f1395e0dbf3d6e4deb6a49ccecf12d918d3cc46e9864736f6c63430007060033",
+  "deployedBytecode": "0x6080604052600080fdfea264697066735822122029825150432c5badfdfaa8f1395e0dbf3d6e4deb6a49ccecf12d918d3cc46e9864736f6c63430007060033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "64:37:1:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "64:37:1:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: UNLICENSED\npragma solidity ^0.7.0;\n\ncontract TestHelpers_EmptyContract {}\n",
+  "sourcePath": "/Users/kelvinfichter/Projects/smock/test/common/contracts/TestHelpers_EmptyContract.sol",
+  "ast": {
+    "absolutePath": "/Users/kelvinfichter/Projects/smock/test/common/contracts/TestHelpers_EmptyContract.sol",
+    "exportedSymbols": {
+      "TestHelpers_EmptyContract": [
+        127
+      ]
+    },
+    "id": 128,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 126,
+        "literals": [
+          "solidity",
+          "^",
+          "0.7",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:23:1"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 127,
+        "linearizedBaseContracts": [
+          127
+        ],
+        "name": "TestHelpers_EmptyContract",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 128,
+        "src": "64:37:1"
+      }
+    ],
+    "src": "39:63:1"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/Users/kelvinfichter/Projects/smock/test/common/contracts/TestHelpers_EmptyContract.sol",
+      "exportedSymbols": {
+        "TestHelpers_EmptyContract": [
+          127
+        ]
+      },
+      "license": "UNLICENSED"
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.7",
+            ".0"
+          ]
+        },
+        "id": 126,
+        "name": "PragmaDirective",
+        "src": "39:23:1"
+      },
+      {
+        "attributes": {
+          "abstract": false,
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            127
+          ],
+          "name": "TestHelpers_EmptyContract",
+          "nodes": [
+            null
+          ],
+          "scope": 128
+        },
+        "id": 127,
+        "name": "ContractDefinition",
+        "src": "64:37:1"
+      }
+    ],
+    "id": 128,
+    "name": "SourceUnit",
+    "src": "39:63:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.7.6+commit.7338295f.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.3",
+  "updatedAt": "2021-01-20T03:38:32.781Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

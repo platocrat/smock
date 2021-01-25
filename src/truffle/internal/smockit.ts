@@ -2,14 +2,16 @@
 import { ethers, Contract, ContractFactory, ContractInterface } from 'ethers'
 import { Provider } from '@ethersproject/providers'
 import * as uuid from 'uuid'
-import hre from 'hardhat'
 
 /* Imports: Internal */
 import { engine } from './hook'
 import { SmockContract, SmockFunction, Smockit } from '../../types/smock.types'
 import { fromHexString, makeRandomAddress, toHexString } from '../../utils'
 
-export type TSmockSpec = Contract | ContractFactory | ContractInterface
+declare const artifacts: any
+declare const config: any
+
+export type TSmockSpec = string | any // Should be TruffleContract, not "any". TODO.
 
 export interface TSmockOptions {
   address?: string
@@ -181,32 +183,14 @@ export const smockit: Smockit<TSmockSpec, TSmockOptions, TSmockHost> = async (
   spec: TSmockSpec,
   options: TSmockOptions = {}
 ): Promise<TSmockHost> => {
+  console.log(config)
   if (typeof spec === 'string') {
-    try {
-      spec = await (hre as any).ethers.getContractFactory(spec)
-    } catch (err) {
-      if (!err.toString().includes('HH903')) {
-        throw err
-      }
-
-      try {
-        spec = new ethers.utils.Interface(JSON.parse(spec as string))
-      } catch (err) {
-        throw err
-      }
-    }
-  } else {
-    try {
-      spec = new ethers.utils.Interface((spec as any).abi)
-    } catch (err) {}
+    spec = await (artifacts.require(spec)).at(
+      options.address || makeRandomAddress()
+    )
   }
 
-  const iface: ContractInterface = (spec as any).interface || spec
-  const contract = new Contract(
-    options.address || makeRandomAddress(),
-    iface,
-    options.provider || (spec as any).provider || (hre as any).ethers.provider
-  ) as TSmockHost
+  const contract = spec as TSmockHost
 
   smockify(contract)
 

@@ -3,7 +3,6 @@ import { MagicSmockContract, SmockContract } from '../../types/smock.types'
 
 export class VM4xEngine {
   private evm: any
-  private ogExecuteCall: any
   private smocks: {
     [id: string]: SmockContract | MagicSmockContract
   } = {}
@@ -78,9 +77,7 @@ export class VM4xEngine {
             gasUsed: new BN(0),
             returnValue: returnValue,
             exceptionError:
-              resolve === 'revert'
-                ? new Error(`Smocked Revert: You meant to do this!`)
-                : undefined,
+              resolve === 'revert' ? new VmError(`revert`) : undefined,
           },
         }
       }
@@ -91,5 +88,15 @@ export class VM4xEngine {
     }
 
     return ogExecuteCall(message)
+  }
+}
+
+class VmError {
+  public error: any
+  public errorType: any
+
+  constructor(error: any) {
+    this.error = error
+    this.errorType = 'VmError'
   }
 }

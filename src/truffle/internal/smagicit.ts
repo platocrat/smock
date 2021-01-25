@@ -1,4 +1,4 @@
-import hre from 'hardhat'
+// import { ethers } from 'hardhat'
 import { Provider } from '@ethersproject/providers'
 import { ethers, Contract, ContractInterface } from 'ethers'
 
@@ -6,6 +6,8 @@ import { engine } from './hook'
 import { MagicSmockContract, Smagicit } from '../../types/smock.types'
 import { smockify } from './smockit'
 import { makeRandomAddress } from '../../utils'
+
+declare const artifacts: any
 
 export type TSmagicSpec = string | Object
 
@@ -35,7 +37,7 @@ export const smagicit: Smagicit<
 ): Promise<TSmagicHost> => {
   if (typeof spec === 'string') {
     try {
-      spec = await (hre as any).ethers.getContractFactory(spec)
+      spec = await artifacts.require(spec)
     } catch (err) {
       if (!err.toString().includes('HH903')) {
         throw err
@@ -57,7 +59,7 @@ export const smagicit: Smagicit<
   const contract = new Contract(
     options.address || makeRandomAddress(),
     iface,
-    options.provider || (spec as any).provider || (hre as any).ethers.provider
+    options.provider || (spec as any).provider
   ) as TSmagicHost
 
   smagicify(contract)
