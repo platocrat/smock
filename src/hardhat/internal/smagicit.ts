@@ -18,7 +18,6 @@ export interface TSmagicHost extends Contract, MagicSmockContract {}
 
 export const smagicify = (contract: TSmagicHost): void => {
   smockify(contract)
-  
   ;(contract.smocked as any).internal = {
     functions: {},
     variables: {},
@@ -33,6 +32,8 @@ export const smagicit: Smagicit<
   spec: TSmagicSpec,
   options: TSmagicOptions = {}
 ): Promise<TSmagicHost> => {
+  throw new Error(`Smagic isn't available yet. Sorry!`)
+
   if (typeof spec === 'string') {
     try {
       spec = await (hre as any).ethers.getContractFactory(spec)

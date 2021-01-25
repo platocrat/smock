@@ -67,14 +67,14 @@ export class VM4xEngine {
       const smock = this._getSmockByAddress(address)
 
       if (smock) {
-        const { resolve, returnValue } = await (smock as any)._smockit(
+        const { resolve, returnValue, gasUsed } = await (smock as any)._smockit(
           message.data
         )
 
         return {
-          gasUsed: new BN(0),
+          gasUsed: new BN(gasUsed),
           execResult: {
-            gasUsed: new BN(0),
+            gasUsed: new BN(gasUsed),
             returnValue: returnValue,
             exceptionError:
               resolve === 'revert' ? new VmError(`revert`) : undefined,

@@ -10,6 +10,10 @@ export interface SmockFunction {
   reset: () => void
 
   will: {
+    use: {
+      gas: (amount: number) => void
+    }
+
     return: {
       (): void
 

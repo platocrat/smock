@@ -8,11 +8,10 @@
     "build:typescript": "tsc -p .",
     "test": "yarn run test:hardhat",
     "test:hardhat": "hardhat test --config test/suites/hardhat/utils/hardhat.config.ts --show-stack-traces",
-    "test:truffle": "truffle test --config test/suites/truffle/utils/truffle.config.js",
     "lint": "yarn run lint:typescript",
     "lint:typescript": "tslint --format stylish --project .",
     "lint:fix": "yarn run lint:fix:typescript",
-    "lint:fix:typescript": "prettier --config prettier-config.json --write \"hardhat.config.ts\" \"{src,test}/**/*.ts\""
+    "lint:fix:typescript": "prettier --config prettier-config.json --write \"{src,test}/**/*.ts\""
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",

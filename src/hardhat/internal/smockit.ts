@@ -22,9 +22,15 @@ const fnsmockify = (smockedFunction: any): void => {
   smockedFunction.reset = () => {
     ;(smockedFunction as any).resolve = 'return'
     ;(smockedFunction as any).returnValue = undefined
+    ;(smockedFunction as any).gasUsed = 0
   }
 
   smockedFunction.will = {
+    use: {
+      gas: (amount: number) => {
+        ;(smockedFunction as any).gasUsed = amount
+      },
+    },
     get return() {
       const fn: any = () => {
         ;(smockedFunction as any).resolve = 'return'
@@ -77,6 +83,7 @@ export const smockify = (contract: TSmockHost): void => {
   ): Promise<{
     resolve: 'return' | 'revert'
     returnValue: Buffer
+    gasUsed: number
   }> {
     let fn: any
     try {
@@ -173,6 +180,7 @@ export const smockify = (contract: TSmockHost): void => {
     return {
       resolve: mockFn.resolve,
       returnValue: fromHexString(encodedReturnValue),
+      gasUsed: mockFn.gasUsed,
     }
   }
 }

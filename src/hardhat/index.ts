@@ -22,6 +22,4 @@ const smock = (smockit as any) as Smock<
 >
 smock.magic = smagicit
 
-export {
-  smock
-}
+export { smock }
