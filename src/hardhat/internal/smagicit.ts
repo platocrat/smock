@@ -1,7 +1,9 @@
+/* Imports: External */
 import hre from 'hardhat'
 import { Provider } from '@ethersproject/providers'
 import { ethers, Contract, ContractInterface } from 'ethers'
 
+/* Imports: Internal */
 import { engine } from './hook'
 import { MagicSmockContract, Smagicit } from '../../types/smock.types'
 import { smockify } from './smockit'
@@ -32,8 +34,6 @@ export const smagicit: Smagicit<
   spec: TSmagicSpec,
   options: TSmagicOptions = {}
 ): Promise<TSmagicHost> => {
-  throw new Error(`Smagic isn't available yet. Sorry!`)
-
   if (typeof spec === 'string') {
     try {
       spec = await (hre as any).ethers.getContractFactory(spec)

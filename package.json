@@ -1,7 +1,7 @@
 {
-  "name": "smock",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "@eth-optimism/smock",
+  "version": "1.0.0-alpha.0",
+  "main": "build/index.js",
   "license": "MIT",
   "scripts": {
     "build": "yarn run build:typescript",
@@ -11,7 +11,8 @@
     "lint": "yarn run lint:typescript",
     "lint:typescript": "tslint --format stylish --project .",
     "lint:fix": "yarn run lint:fix:typescript",
-    "lint:fix:typescript": "prettier --config prettier-config.json --write \"{src,test}/**/*.ts\""
+    "lint:fix:typescript": "prettier --config prettier-config.json --write \"{src,test}/**/*.ts\"",
+    "clean": "rimraf build"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",
@@ -32,6 +33,7 @@
     "lodash": "^4.17.20",
     "mocha": "^8.2.1",
     "prettier": "^2.1.2",
+    "rimraf": "^3.0.2",
     "truffle": "^5.1.62",
     "tslint": "^6.1.3"
   },
