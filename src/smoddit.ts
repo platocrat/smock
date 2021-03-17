@@ -1,11 +1,9 @@
 /* Imports: External */
-import hre from 'hardhat'
 import { ethers, Contract, ContractInterface } from 'ethers'
 
 /* Imports: Internal */
 import { engine } from './hook'
 import { ModifiableContract } from './types'
-import { smockify } from './smockit'
 import { makeRandomAddress } from './utils'
 import { Smoddit } from './types'
 
@@ -19,6 +17,8 @@ export const smoddify = (contract: ModifiableContract): void => {
 }
 
 export const smoddit: Smoddit = async (spec, options = {}) => {
+  const hre = require('hardhat')
+
   if (typeof spec === 'string') {
     try {
       spec = await (hre as any).ethers.getContractFactory(spec)

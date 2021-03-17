@@ -1,4 +1,8 @@
+/* Imports: External */
 import BN from 'bn.js'
+import { toHexString } from '@eth-optimism/core-utils'
+
+/* Imports: Internal */
 import { ModifiableContract, MockContract } from './types'
 
 export class VM4xEngine {
@@ -17,6 +21,7 @@ export class VM4xEngine {
     const ogvm = evm.default
     evm.default = (function () {
       return function (...args: any) {
+        console.log('???')
         const subvm = new ogvm(...args)
         const ogExecuteCall = subvm._executeCall.bind(subvm)
         subvm._executeCall = async (message: any): Promise<any> => {
@@ -65,13 +70,19 @@ export class VM4xEngine {
     message: any
   ): Promise<any> {
     try {
-      const address = '0x' + message.to.toString('hex')
+      const address = toHexString(message.to)
       const smock = this._getSmockByAddress(address)
 
       if (smock) {
-        const { resolve, returnValue, gasUsed } = await (smock as any)._smockit(
-          message.data
-        )
+        const {
+          resolve,
+          functionName,
+          rawReturnValue,
+          returnValue,
+          gasUsed,
+        } = await (smock as any)._smockit(message.data)
+
+        smock.smocked[functionName].callArgsList.push(rawReturnValue)
 
         return {
           gasUsed: new BN(gasUsed),

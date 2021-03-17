@@ -13,6 +13,9 @@ export interface MockVariable {
 export interface MockFunction {
   reset: () => void
 
+  callArgsList: any[]
+  calledWith: (...args: any[]) => boolean
+
   will: {
     use: {
       gas: (amount: number) => void

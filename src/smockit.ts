@@ -1,8 +1,6 @@
 /* Imports: External */
 import { ethers, Contract, ContractInterface } from 'ethers'
 import { fromHexString, toHexString } from '@eth-optimism/core-utils'
-import * as uuid from 'uuid'
-import hre from 'hardhat'
 
 /* Imports: Internal */
 import { engine } from './hook'
@@ -11,6 +9,8 @@ import { makeRandomAddress } from './utils'
 import { MockContract, Smockit } from './types'
 
 const fnsmockify = (smockedFunction: any): void => {
+  smockedFunction.callArgsList = []
+
   smockedFunction.reset = () => {
     ;(smockedFunction as any).resolve = 'return'
     ;(smockedFunction as any).returnValue = undefined
@@ -71,6 +71,8 @@ export const smockify = (contract: MockContract): void => {
     data: Buffer
   ): Promise<{
     resolve: 'return' | 'revert'
+    functionName: string
+    rawReturnValue: any
     returnValue: Buffer
     gasUsed: number
   }> {
@@ -168,6 +170,8 @@ export const smockify = (contract: MockContract): void => {
 
     return {
       resolve: mockFn.resolve,
+      functionName: fn ? fn.name : null,
+      rawReturnValue,
       returnValue: fromHexString(encodedReturnValue),
       gasUsed: mockFn.gasUsed,
     }
@@ -175,6 +179,8 @@ export const smockify = (contract: MockContract): void => {
 }
 
 export const smockit: Smockit = async (spec, options = {}) => {
+  const hre = require('hardhat')
+
   if (typeof spec === 'string') {
     try {
       spec = await (hre as any).ethers.getContractFactory(spec)
