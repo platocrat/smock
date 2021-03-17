@@ -5,20 +5,20 @@ import { ethers, Contract, ContractInterface } from 'ethers'
 
 /* Imports: Internal */
 import { engine } from './hook'
-import { MagicSmockContract, Smagicit } from '../../types/smock.types'
+import { ModifiableContract, Smoddit } from '../../types/smock.types'
 import { smockify } from './smockit'
 import { makeRandomAddress } from '../../utils'
 
-export type TSmagicSpec = string | Object
+export type TSmodSpec = string | Object
 
-export interface TSmagicOptions {
+export interface TSmodOptions {
   address?: string
   provider?: Provider
 }
 
-export interface TSmagicHost extends Contract, MagicSmockContract {}
+export interface TSmodHost extends Contract, ModifiableContract {}
 
-export const smagicify = (contract: TSmagicHost): void => {
+export const smoddify = (contract: TSmodHost): void => {
   smockify(contract)
   ;(contract.smocked as any).internal = {
     functions: {},
@@ -26,14 +26,14 @@ export const smagicify = (contract: TSmagicHost): void => {
   }
 }
 
-export const smagicit: Smagicit<
-  TSmagicSpec,
-  TSmagicOptions,
-  TSmagicHost
+export const smoddit: Smoddit<
+  TSmodSpec,
+  TSmodOptions,
+  TSmodHost
 > = async (
-  spec: TSmagicSpec,
-  options: TSmagicOptions = {}
-): Promise<TSmagicHost> => {
+  spec,
+  options = {}
+) => {
   if (typeof spec === 'string') {
     try {
       spec = await (hre as any).ethers.getContractFactory(spec)
@@ -59,9 +59,9 @@ export const smagicit: Smagicit<
     options.address || makeRandomAddress(),
     iface,
     options.provider || (spec as any).provider || (hre as any).ethers.provider
-  ) as TSmagicHost
+  ) as TSmodHost
 
-  smagicify(contract)
+  smoddify(contract)
 
   engine.attachSmockContract(contract)
 

@@ -6,12 +6,12 @@ import { toPlainObject, toArray } from 'lodash'
 import { BigNumber, Contract } from 'ethers'
 
 /* Imports: Internal */
-import { smock } from '../../../../../src/hardhat'
+import { smockit } from '../../../../../src/hardhat'
 
 describe('[hardhat] smock: function manipulation tests', () => {
   let mock: any
   beforeEach(async () => {
-    mock = await smock('TestHelpers_BasicReturnContract')
+    mock = await smockit('TestHelpers_BasicReturnContract')
   })
 
   let FallbackCaller: Contract

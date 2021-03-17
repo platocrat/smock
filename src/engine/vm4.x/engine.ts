@@ -1,10 +1,10 @@
 import BN = require('bn.js')
-import { MagicSmockContract, SmockContract } from '../../types/smock.types'
+import { ModifiableContract, MockContract } from '../../types/smock.types'
 
 export class VM4xEngine {
   private evm: any
   private smocks: {
-    [id: string]: SmockContract | MagicSmockContract
+    [id: string]: MockContract | ModifiableContract
   } = {}
 
   public attachEVM(evm: any): void {
@@ -32,11 +32,11 @@ export class VM4xEngine {
     this.evm = undefined
   }
 
-  public attachSmockContract(mock: SmockContract): void {
+  public attachSmockContract(mock: MockContract): void {
     this.smocks[mock.smocked.id] = mock
   }
 
-  public detatchSmockContract(mock: SmockContract | string): void {
+  public detatchSmockContract(mock: MockContract | string): void {
     if (typeof mock === 'string') {
       delete this.smocks[mock]
     } else {
@@ -44,13 +44,13 @@ export class VM4xEngine {
     }
   }
 
-  public attachMagicSmockContract(mock: MagicSmockContract, id: string): void {}
+  public attachMagicSmockContract(mock: ModifiableContract, id: string): void {}
 
-  public detatchMagicSmockContract(mock: MagicSmockContract | string): void {}
+  public detatchMagicSmockContract(mock: ModifiableContract | string): void {}
 
   private _getSmockByAddress(
     address: string
-  ): SmockContract | MagicSmockContract | undefined {
+  ): MockContract | ModifiableContract | undefined {
     for (const smock of Object.values(this.smocks)) {
       if (smock.smocked.address.toLowerCase() === address.toLowerCase()) {
         return smock

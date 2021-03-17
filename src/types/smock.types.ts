@@ -1,4 +1,4 @@
-export interface SmockVariable {
+export interface MockVariable {
   reset: () => void
 
   will: {
@@ -6,7 +6,7 @@ export interface SmockVariable {
   }
 }
 
-export interface SmockFunction {
+export interface MockFunction {
   reset: () => void
 
   will: {
@@ -28,45 +28,45 @@ export interface SmockFunction {
   }
 }
 
-export interface SmockLibrary {
+export interface MockLibrary {
   smocked: {
     functions: {
-      [name: string]: SmockFunction
+      [name: string]: MockFunction
     }
   }
 }
 
-export interface SmockContract {
+export interface MockContract {
   smocked: {
     id: string
     address: string
 
-    fallback: SmockFunction
+    fallback: MockFunction
 
     functions: {
-      [name: string]: SmockFunction
+      [name: string]: MockFunction
     }
   }
 }
 
-export interface MagicSmockContract {
+export interface ModifiableContract {
   smocked: {
     id: string
     address: string
 
-    fallback: SmockFunction
+    fallback: MockFunction
 
     functions: {
-      [name: string]: SmockFunction
+      [name: string]: MockFunction
     }
 
     internal: {
       functions: {
-        [name: string]: SmockFunction
+        [name: string]: MockFunction
       }
 
       variables: {
-        [name: string]: SmockVariable
+        [name: string]: MockVariable
       }
     }
   }
@@ -75,22 +75,11 @@ export interface MagicSmockContract {
 export type Smockit<
   TSmockSpec,
   TSmockOptions,
-  TSmockHost extends SmockContract
+  TSmockHost extends MockContract
 > = (spec: TSmockSpec, options?: TSmockOptions) => Promise<TSmockHost>
 
-export type Smagicit<
-  TSmagicSpec,
-  TSmagicOptions,
-  TSmagicHost extends MagicSmockContract
-> = (spec: TSmagicSpec, options?: TSmagicOptions) => Promise<TSmagicHost>
-
-export type Smock<
-  TSmockSpec,
-  TSmockOptions,
-  TSmockHost extends SmockContract,
-  TSmagicSpec,
-  TSmagicOptions,
-  TSmagicHost extends MagicSmockContract
-> = Smockit<TSmockSpec, TSmockOptions, TSmockHost> & {
-  magic: Smagicit<TSmagicSpec, TSmagicOptions, TSmagicHost>
-}
+export type Smoddit<
+  TSmodSpec,
+  TSmodOptions,
+  TSmodHost extends ModifiableContract
+> = (spec: TSmodSpec, options?: TSmodOptions) => Promise<TSmodHost>

@@ -4,7 +4,7 @@ import { expect } from '../../../../common/setup'
 import { ethers } from 'hardhat'
 
 /* Imports: Internal */
-import { smock } from '../../../../../src/hardhat'
+import { smockit } from '../../../../../src/hardhat'
 import { isSmockContract } from '../../../../common/type-checks'
 import { getTestHelperJSON } from '../../utils'
 
@@ -12,7 +12,7 @@ describe('[hardhat] smock: initialization tests', () => {
   describe('initialization: ethers objects', () => {
     it('should be able to create a SmockContract from an ethers ContractFactory', async () => {
       const spec = await ethers.getContractFactory('TestHelpers_EmptyContract')
-      const mock = await smock(spec)
+      const mock = await smockit(spec)
 
       expect(isSmockContract(mock)).to.be.true
     })
@@ -23,7 +23,7 @@ describe('[hardhat] smock: initialization tests', () => {
       )
 
       const spec = await factory.deploy()
-      const mock = await smock(spec)
+      const mock = await smockit(spec)
 
       expect(isSmockContract(mock)).to.be.true
     })
@@ -34,7 +34,7 @@ describe('[hardhat] smock: initialization tests', () => {
       )
 
       const spec = factory.interface
-      const mock = await smock(spec)
+      const mock = await smockit(spec)
 
       expect(isSmockContract(mock)).to.be.true
     })
@@ -43,21 +43,21 @@ describe('[hardhat] smock: initialization tests', () => {
   describe('initialization: other', () => {
     it('should be able to create a SmockContract from a contract name', async () => {
       const spec = 'TestHelpers_EmptyContract'
-      const mock = await smock(spec)
+      const mock = await smockit(spec)
 
       expect(isSmockContract(mock)).to.be.true
     })
 
     it('should be able to create a SmockContract from a JSON contract artifact object', async () => {
       const spec = getTestHelperJSON('TestHelpers_BasicReturnContract')
-      const mock = await smock(spec)
+      const mock = await smockit(spec)
 
       expect(isSmockContract(mock)).to.be.true
     })
 
     it('should be able to create a SmockContract from a JSON contract ABI object', async () => {
       const spec = getTestHelperJSON('TestHelpers_BasicReturnContract')
-      const mock = await smock(spec.abi)
+      const mock = await smockit(spec.abi)
 
       expect(isSmockContract(mock)).to.be.true
     })
@@ -66,7 +66,7 @@ describe('[hardhat] smock: initialization tests', () => {
       const json = getTestHelperJSON('TestHelpers_BasicReturnContract')
 
       const spec = JSON.stringify(json.abi)
-      const mock = await smock(spec)
+      const mock = await smockit(spec)
 
       expect(isSmockContract(mock)).to.be.true
     })

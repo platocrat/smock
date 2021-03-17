@@ -6,7 +6,7 @@ import hre from 'hardhat'
 
 /* Imports: Internal */
 import { engine } from './hook'
-import { SmockContract, SmockFunction, Smockit } from '../../types/smock.types'
+import { MockContract, MockFunction, Smockit } from '../../types/smock.types'
 import { fromHexString, makeRandomAddress, toHexString } from '../../utils'
 
 export type TSmockSpec = Contract | ContractFactory | ContractInterface
@@ -16,7 +16,7 @@ export interface TSmockOptions {
   provider?: Provider
 }
 
-export interface TSmockHost extends Contract, SmockContract {}
+export interface TSmockHost extends Contract, MockContract {}
 
 const fnsmockify = (smockedFunction: any): void => {
   smockedFunction.reset = () => {
@@ -73,7 +73,7 @@ export const smockify = (contract: TSmockHost): void => {
   fnsmockify(contract.smocked.fallback)
 
   for (const functionName of Object.keys(contract.functions)) {
-    contract.smocked.functions[functionName] = {} as SmockFunction
+    contract.smocked.functions[functionName] = {} as MockFunction
     const smockedFunction = contract.smocked.functions[functionName]
     fnsmockify(smockedFunction)
   }
