@@ -1,22 +1,14 @@
 /* Imports: External */
-import { ethers, Contract, ContractFactory, ContractInterface } from 'ethers'
-import { Provider } from '@ethersproject/providers'
+import { ethers, Contract, ContractInterface } from 'ethers'
+import { fromHexString, toHexString } from '@eth-optimism/core-utils'
 import * as uuid from 'uuid'
 import hre from 'hardhat'
 
 /* Imports: Internal */
 import { engine } from './hook'
-import { MockContract, MockFunction, Smockit } from '../../types/smock.types'
-import { fromHexString, makeRandomAddress, toHexString } from '../../utils'
-
-export type TSmockSpec = Contract | ContractFactory | ContractInterface
-
-export interface TSmockOptions {
-  address?: string
-  provider?: Provider
-}
-
-export interface TSmockHost extends Contract, MockContract {}
+import { MockFunction } from './types'
+import { makeRandomAddress } from './utils'
+import { MockContract, Smockit } from './types'
 
 const fnsmockify = (smockedFunction: any): void => {
   smockedFunction.reset = () => {
@@ -62,19 +54,16 @@ const fnsmockify = (smockedFunction: any): void => {
   smockedFunction.reset()
 }
 
-export const smockify = (contract: TSmockHost): void => {
+export const smockify = (contract: MockContract): void => {
   contract.smocked = {
-    id: uuid.v4(),
-    address: contract.address,
     fallback: {} as any,
-    functions: {},
   }
 
   fnsmockify(contract.smocked.fallback)
 
   for (const functionName of Object.keys(contract.functions)) {
-    contract.smocked.functions[functionName] = {} as MockFunction
-    const smockedFunction = contract.smocked.functions[functionName]
+    contract.smocked[functionName] = {} as MockFunction
+    const smockedFunction = contract.smocked[functionName]
     fnsmockify(smockedFunction)
   }
 
@@ -97,7 +86,7 @@ export const smockify = (contract: TSmockHost): void => {
     let mockFn: any
     if (fn !== null) {
       params = this.interface.decodeFunctionData(fn, toHexString(data))
-      mockFn = this.smocked.functions[fn.name]
+      mockFn = this.smocked[fn.name]
     } else {
       params = toHexString(data)
       mockFn = this.smocked.fallback
@@ -185,10 +174,7 @@ export const smockify = (contract: TSmockHost): void => {
   }
 }
 
-export const smockit: Smockit<TSmockSpec, TSmockOptions, TSmockHost> = async (
-  spec: TSmockSpec,
-  options: TSmockOptions = {}
-): Promise<TSmockHost> => {
+export const smockit: Smockit = async (spec, options = {}) => {
   if (typeof spec === 'string') {
     try {
       spec = await (hre as any).ethers.getContractFactory(spec)
@@ -214,7 +200,7 @@ export const smockit: Smockit<TSmockSpec, TSmockOptions, TSmockHost> = async (
     options.address || makeRandomAddress(),
     iface,
     options.provider || (spec as any).provider || (hre as any).ethers.provider
-  ) as TSmockHost
+  ) as MockContract
 
   smockify(contract)
 

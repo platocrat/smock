@@ -1,12 +1,11 @@
-import { expect } from '../../../../common/setup'
+import { expect } from '../../setup'
 
 /* Imports: External */
 import { ethers } from 'hardhat'
 
 /* Imports: Internal */
-import { smockit } from '../../../../../src/hardhat'
-import { isSmockContract } from '../../../../common/type-checks'
-import { getTestHelperJSON } from '../../utils'
+import { smockit } from '../../../src'
+import { getTestHelperJSON, isSmockContract } from '../../utils'
 
 describe('[hardhat] smock: initialization tests', () => {
   describe('initialization: ethers objects', () => {

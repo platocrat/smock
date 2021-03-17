@@ -1,4 +1,4 @@
-import { expect } from '../../../../common/setup'
+import { expect } from '../../setup'
 
 /* Imports: External */
 import { ethers } from 'hardhat'
@@ -6,10 +6,10 @@ import { toPlainObject, toArray } from 'lodash'
 import { BigNumber, Contract } from 'ethers'
 
 /* Imports: Internal */
-import { smockit } from '../../../../../src/hardhat'
+import { MockContract, smockit } from '../../../src'
 
 describe('[hardhat] smock: function manipulation tests', () => {
-  let mock: any
+  let mock: MockContract
   beforeEach(async () => {
     mock = await smockit('TestHelpers_BasicReturnContract')
   })
@@ -91,13 +91,13 @@ describe('[hardhat] smock: function manipulation tests', () => {
   describe('manipulating functions', () => {
     it('should be able to make a function return without any data', async () => {
       const expected = []
-      mock.smocked.functions.empty.will.return()
+      mock.smocked.empty.will.return()
 
       expect(await mock.callStatic.empty()).to.deep.equal(expected)
     })
 
     it('should be able to make a function revert without any data', async () => {
-      mock.smocked.functions.empty.will.revert()
+      mock.smocked.empty.will.revert()
 
       await expect(mock.callStatic.empty()).to.be.reverted
     })
@@ -132,14 +132,14 @@ describe('[hardhat] smock: function manipulation tests', () => {
         describe('from a specified value', () => {
           it('should be able to return a boolean', async () => {
             const expected = true
-            mock.smocked.functions.getBoolean.will.return.with(expected)
+            mock.smocked.getBoolean.will.return.with(expected)
 
             expect(await mock.callStatic.getBoolean()).to.equal(expected)
           })
 
           it('should be able to return a uint256', async () => {
             const expected = 1234
-            mock.smocked.functions.getUint256.will.return.with(expected)
+            mock.smocked.getUint256.will.return.with(expected)
 
             expect(await mock.callStatic.getUint256()).to.equal(expected)
           })
@@ -147,7 +147,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
           it('should be able to return a bytes32', async () => {
             const expected =
               '0x1234123412341234123412341234123412341234123412341234123412341234'
-            mock.smocked.functions.getBytes32.will.return.with(expected)
+            mock.smocked.getBytes32.will.return.with(expected)
 
             expect(await mock.callStatic.getBytes32()).to.equal(expected)
           })
@@ -157,7 +157,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
           describe('without input arguments', () => {
             it('should be able to return a boolean', async () => {
               const expected = true
-              mock.smocked.functions.getBoolean.will.return.with(() => {
+              mock.smocked.getBoolean.will.return.with(() => {
                 return expected
               })
 
@@ -166,7 +166,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
 
             it('should be able to return a uint256', async () => {
               const expected = 1234
-              mock.smocked.functions.getUint256.will.return.with(() => {
+              mock.smocked.getUint256.will.return.with(() => {
                 return expected
               })
 
@@ -176,7 +176,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
             it('should be able to return a bytes32', async () => {
               const expected =
                 '0x1234123412341234123412341234123412341234123412341234123412341234'
-              mock.smocked.functions.getBytes32.will.return.with(() => {
+              mock.smocked.getBytes32.will.return.with(() => {
                 return expected
               })
 
@@ -187,7 +187,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
           describe('with input arguments', () => {
             it('should be able to return a boolean', async () => {
               const expected = true
-              mock.smocked.functions.getInputtedBoolean.will.return.with(
+              mock.smocked.getInputtedBoolean.will.return.with(
                 (arg1: boolean) => {
                   return arg1
                 }
@@ -200,7 +200,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
 
             it('should be able to return a uint256', async () => {
               const expected = 1234
-              mock.smocked.functions.getInputtedUint256.will.return.with(
+              mock.smocked.getInputtedUint256.will.return.with(
                 (arg1: number) => {
                   return arg1
                 }
@@ -214,7 +214,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
             it('should be able to return a bytes32', async () => {
               const expected =
                 '0x1234123412341234123412341234123412341234123412341234123412341234'
-              mock.smocked.functions.getInputtedBytes32.will.return.with(
+              mock.smocked.getInputtedBytes32.will.return.with(
                 (arg1: string) => {
                   return arg1
                 }
@@ -233,7 +233,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
               const expected = async () => {
                 return true
               }
-              mock.smocked.functions.getBoolean.will.return.with(async () => {
+              mock.smocked.getBoolean.will.return.with(async () => {
                 return expected()
               })
 
@@ -246,7 +246,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
               const expected = async () => {
                 return 1234
               }
-              mock.smocked.functions.getUint256.will.return.with(async () => {
+              mock.smocked.getUint256.will.return.with(async () => {
                 return expected()
               })
 
@@ -259,7 +259,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
               const expected = async () => {
                 return '0x1234123412341234123412341234123412341234123412341234123412341234'
               }
-              mock.smocked.functions.getBytes32.will.return.with(async () => {
+              mock.smocked.getBytes32.will.return.with(async () => {
                 return expected()
               })
 
@@ -274,29 +274,29 @@ describe('[hardhat] smock: function manipulation tests', () => {
           describe('for a boolean', () => {
             it('should return false after resetting', async () => {
               const expected1 = true
-              mock.smocked.functions.getBoolean.will.return.with(expected1)
+              mock.smocked.getBoolean.will.return.with(expected1)
 
               expect(await mock.callStatic.getBoolean()).to.equal(expected1)
 
               const expected2 = false
-              mock.smocked.functions.getBoolean.reset()
+              mock.smocked.getBoolean.reset()
 
               expect(await mock.callStatic.getBoolean()).to.equal(expected2)
             })
 
             it('should be able to reset and change behaviors', async () => {
               const expected1 = true
-              mock.smocked.functions.getBoolean.will.return.with(expected1)
+              mock.smocked.getBoolean.will.return.with(expected1)
 
               expect(await mock.callStatic.getBoolean()).to.equal(expected1)
 
               const expected2 = false
-              mock.smocked.functions.getBoolean.reset()
+              mock.smocked.getBoolean.reset()
 
               expect(await mock.callStatic.getBoolean()).to.equal(expected2)
 
               const expected3 = true
-              mock.smocked.functions.getBoolean.will.return.with(expected3)
+              mock.smocked.getBoolean.will.return.with(expected3)
 
               expect(await mock.callStatic.getBoolean()).to.equal(expected3)
             })
@@ -305,29 +305,29 @@ describe('[hardhat] smock: function manipulation tests', () => {
           describe('for a uint256', () => {
             it('should return zero after resetting', async () => {
               const expected1 = 1234
-              mock.smocked.functions.getUint256.will.return.with(expected1)
+              mock.smocked.getUint256.will.return.with(expected1)
 
               expect(await mock.callStatic.getUint256()).to.equal(expected1)
 
               const expected2 = 0
-              mock.smocked.functions.getUint256.reset()
+              mock.smocked.getUint256.reset()
 
               expect(await mock.callStatic.getUint256()).to.equal(expected2)
             })
 
             it('should be able to reset and change behaviors', async () => {
               const expected1 = 1234
-              mock.smocked.functions.getUint256.will.return.with(expected1)
+              mock.smocked.getUint256.will.return.with(expected1)
 
               expect(await mock.callStatic.getUint256()).to.equal(expected1)
 
               const expected2 = 0
-              mock.smocked.functions.getUint256.reset()
+              mock.smocked.getUint256.reset()
 
               expect(await mock.callStatic.getUint256()).to.equal(expected2)
 
               const expected3 = 4321
-              mock.smocked.functions.getUint256.will.return.with(expected3)
+              mock.smocked.getUint256.will.return.with(expected3)
 
               expect(await mock.callStatic.getUint256()).to.equal(expected3)
             })
@@ -337,13 +337,13 @@ describe('[hardhat] smock: function manipulation tests', () => {
             it('should return 32 zero bytes after resetting', async () => {
               const expected1 =
                 '0x1234123412341234123412341234123412341234123412341234123412341234'
-              mock.smocked.functions.getBytes32.will.return.with(expected1)
+              mock.smocked.getBytes32.will.return.with(expected1)
 
               expect(await mock.callStatic.getBytes32()).to.equal(expected1)
 
               const expected2 =
                 '0x0000000000000000000000000000000000000000000000000000000000000000'
-              mock.smocked.functions.getBytes32.reset()
+              mock.smocked.getBytes32.reset()
 
               expect(await mock.callStatic.getBytes32()).to.equal(expected2)
             })
@@ -351,19 +351,19 @@ describe('[hardhat] smock: function manipulation tests', () => {
             it('should be able to reset and change behaviors', async () => {
               const expected1 =
                 '0x1234123412341234123412341234123412341234123412341234123412341234'
-              mock.smocked.functions.getBytes32.will.return.with(expected1)
+              mock.smocked.getBytes32.will.return.with(expected1)
 
               expect(await mock.callStatic.getBytes32()).to.equal(expected1)
 
               const expected2 =
                 '0x0000000000000000000000000000000000000000000000000000000000000000'
-              mock.smocked.functions.getBytes32.reset()
+              mock.smocked.getBytes32.reset()
 
               expect(await mock.callStatic.getBytes32()).to.equal(expected2)
 
               const expected3 =
                 '0x4321432143214321432143214321432143214321432143214321432143214321'
-              mock.smocked.functions.getBytes32.will.return.with(expected3)
+              mock.smocked.getBytes32.will.return.with(expected3)
 
               expect(await mock.callStatic.getBytes32()).to.equal(expected3)
             })
@@ -376,14 +376,14 @@ describe('[hardhat] smock: function manipulation tests', () => {
           it('should be able to return a bytes value', async () => {
             const expected =
               '0x56785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678'
-            mock.smocked.functions.getBytes.will.return.with(expected)
+            mock.smocked.getBytes.will.return.with(expected)
 
             expect(await mock.callStatic.getBytes()).to.equal(expected)
           })
 
           it('should be able to return a string value', async () => {
             const expected = 'this is an expected return string'
-            mock.smocked.functions.getString.will.return.with(expected)
+            mock.smocked.getString.will.return.with(expected)
 
             expect(await mock.callStatic.getString()).to.equal(expected)
           })
@@ -395,11 +395,14 @@ describe('[hardhat] smock: function manipulation tests', () => {
               valBytes32:
                 '0x1234123412341234123412341234123412341234123412341234123412341234',
             }
-            mock.smocked.functions.getStructFixedSize.will.return.with(expected)
+            mock.smocked.getStructFixedSize.will.return.with(expected)
 
-            expect(
-              toPlainObject(await mock.callStatic.getStructFixedSize())
-            ).to.deep.include(expected)
+            const result = toPlainObject(
+              await mock.callStatic.getStructFixedSize()
+            )
+            expect(result.valBoolean).to.equal(expected.valBoolean)
+            expect(result.valUint256).to.deep.equal(expected.valUint256)
+            expect(result.valBytes32).to.equal(expected.valBytes32)
           })
 
           it('should be able to return a struct with dynamic size values', async () => {
@@ -408,13 +411,13 @@ describe('[hardhat] smock: function manipulation tests', () => {
                 '0x56785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678',
               valString: 'this is an expected return string',
             }
-            mock.smocked.functions.getStructDynamicSize.will.return.with(
-              expected
-            )
+            mock.smocked.getStructDynamicSize.will.return.with(expected)
 
-            expect(
-              toPlainObject(await mock.callStatic.getStructDynamicSize())
-            ).to.deep.include(expected)
+            const result = toPlainObject(
+              await mock.callStatic.getStructDynamicSize()
+            )
+            expect(result.valBytes).to.equal(expected.valBytes)
+            expect(result.valString).to.equal(expected.valString)
           })
 
           it('should be able to return a struct with both fixed and dynamic size values', async () => {
@@ -427,11 +430,16 @@ describe('[hardhat] smock: function manipulation tests', () => {
                 '0x56785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678567856785678',
               valString: 'this is an expected return string',
             }
-            mock.smocked.functions.getStructMixedSize.will.return.with(expected)
+            mock.smocked.getStructMixedSize.will.return.with(expected)
 
-            expect(
-              toPlainObject(await mock.callStatic.getStructMixedSize())
-            ).to.deep.include(expected)
+            const result = toPlainObject(
+              await mock.callStatic.getStructMixedSize()
+            )
+            expect(result.valBoolean).to.equal(expected.valBoolean)
+            expect(result.valUint256).to.deep.equal(expected.valUint256)
+            expect(result.valBytes32).to.equal(expected.valBytes32)
+            expect(result.valBytes).to.equal(expected.valBytes)
+            expect(result.valString).to.equal(expected.valString)
           })
 
           it('should be able to return a nested struct', async () => {
@@ -448,25 +456,38 @@ describe('[hardhat] smock: function manipulation tests', () => {
                 valString: 'this is an expected return string',
               },
             }
-            mock.smocked.functions.getStructNested.will.return.with(expected)
+            mock.smocked.getStructNested.will.return.with(expected)
 
-            expect(
-              toPlainObject(await mock.callStatic.getStructNested())
-            ).to.deep.include({
-              valStructFixedSize: toArray(expected.valStructFixedSize),
-              valStructDynamicSize: toArray(expected.valStructDynamicSize),
-            })
+            const result = toPlainObject(
+              await mock.callStatic.getStructNested()
+            )
+            expect(result.valStructFixedSize[0]).to.deep.equal(
+              expected.valStructFixedSize.valBoolean
+            )
+            expect(result.valStructFixedSize[1]).to.deep.equal(
+              expected.valStructFixedSize.valUint256
+            )
+            expect(result.valStructFixedSize[2]).to.deep.equal(
+              expected.valStructFixedSize.valBytes32
+            )
+            expect(result.valStructDynamicSize[0]).to.deep.equal(
+              expected.valStructDynamicSize.valBytes
+            )
+            expect(result.valStructDynamicSize[1]).to.deep.equal(
+              expected.valStructDynamicSize.valString
+            )
           })
 
           it('should be able to return an array of uint256 values', async () => {
             const expected = [1234, 2345, 3456, 4567, 5678, 6789].map((n) => {
               return BigNumber.from(n)
             })
-            mock.smocked.functions.getArrayUint256.will.return.with(expected)
+            mock.smocked.getArrayUint256.will.return.with(expected)
 
-            expect(await mock.callStatic.getArrayUint256()).to.deep.equal(
-              expected
-            )
+            const result = await mock.callStatic.getArrayUint256()
+            for (let i = 0; i < result.length; i++) {
+              expect(result[i]).to.deep.equal(expected[i])
+            }
           })
         })
       })
@@ -476,7 +497,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
       describe('from a specified value', () => {
         it('should be able to revert with a string value', async () => {
           const expected = 'this is a revert string'
-          mock.smocked.functions.getUint256.will.revert.with(expected)
+          mock.smocked.getUint256.will.revert.with(expected)
 
           await expect(mock.callStatic.getUint256()).to.be.revertedWith(
             expected
@@ -487,7 +508,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
       describe('from a function', () => {
         it('should be able to revert with a string value', async () => {
           const expected = 'this is a revert string'
-          mock.smocked.functions.getUint256.will.revert.with(() => {
+          mock.smocked.getUint256.will.revert.with(() => {
             return expected
           })
 
@@ -502,7 +523,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
           const expected = async () => {
             return 'this is a revert string'
           }
-          mock.smocked.functions.getUint256.will.revert.with(async () => {
+          mock.smocked.getUint256.will.revert.with(async () => {
             return expected()
           })
 
@@ -516,33 +537,33 @@ describe('[hardhat] smock: function manipulation tests', () => {
         describe('for a boolean', () => {
           it('should return false after resetting', async () => {
             const expected1 = 'this is a revert string'
-            mock.smocked.functions.getBoolean.will.revert.with(expected1)
+            mock.smocked.getBoolean.will.revert.with(expected1)
 
             await expect(mock.callStatic.getBoolean()).to.be.revertedWith(
               expected1
             )
 
             const expected2 = false
-            mock.smocked.functions.getBoolean.reset()
+            mock.smocked.getBoolean.reset()
 
             expect(await mock.callStatic.getBoolean()).to.equal(expected2)
           })
 
           it('should be able to reset and change behaviors', async () => {
             const expected1 = 'this is a revert string'
-            mock.smocked.functions.getBoolean.will.revert.with(expected1)
+            mock.smocked.getBoolean.will.revert.with(expected1)
 
             await expect(mock.callStatic.getBoolean()).to.be.revertedWith(
               expected1
             )
 
             const expected2 = false
-            mock.smocked.functions.getBoolean.reset()
+            mock.smocked.getBoolean.reset()
 
             expect(await mock.callStatic.getBoolean()).to.equal(expected2)
 
             const expected3 = true
-            mock.smocked.functions.getBoolean.will.return.with(expected3)
+            mock.smocked.getBoolean.will.return.with(expected3)
 
             expect(await mock.callStatic.getBoolean()).to.equal(expected3)
           })
@@ -551,33 +572,33 @@ describe('[hardhat] smock: function manipulation tests', () => {
         describe('for a uint256', () => {
           it('should return zero after resetting', async () => {
             const expected1 = 'this is a revert string'
-            mock.smocked.functions.getUint256.will.revert.with(expected1)
+            mock.smocked.getUint256.will.revert.with(expected1)
 
             await expect(mock.callStatic.getUint256()).to.be.revertedWith(
               expected1
             )
 
             const expected2 = 0
-            mock.smocked.functions.getUint256.reset()
+            mock.smocked.getUint256.reset()
 
             expect(await mock.callStatic.getUint256()).to.equal(expected2)
           })
 
           it('should be able to reset and change behaviors', async () => {
             const expected1 = 'this is a revert string'
-            mock.smocked.functions.getUint256.will.revert.with(expected1)
+            mock.smocked.getUint256.will.revert.with(expected1)
 
             await expect(mock.callStatic.getUint256()).to.be.revertedWith(
               expected1
             )
 
             const expected2 = 0
-            mock.smocked.functions.getUint256.reset()
+            mock.smocked.getUint256.reset()
 
             expect(await mock.callStatic.getUint256()).to.equal(expected2)
 
             const expected3 = 1234
-            mock.smocked.functions.getUint256.will.return.with(expected3)
+            mock.smocked.getUint256.will.return.with(expected3)
 
             expect(await mock.callStatic.getUint256()).to.equal(expected3)
           })
@@ -586,7 +607,7 @@ describe('[hardhat] smock: function manipulation tests', () => {
         describe('for a bytes32', () => {
           it('should return 32 zero bytes after resetting', async () => {
             const expected1 = 'this is a revert string'
-            mock.smocked.functions.getBytes32.will.revert.with(expected1)
+            mock.smocked.getBytes32.will.revert.with(expected1)
 
             await expect(mock.callStatic.getBytes32()).to.be.revertedWith(
               expected1
@@ -594,14 +615,14 @@ describe('[hardhat] smock: function manipulation tests', () => {
 
             const expected2 =
               '0x0000000000000000000000000000000000000000000000000000000000000000'
-            mock.smocked.functions.getBytes32.reset()
+            mock.smocked.getBytes32.reset()
 
             expect(await mock.callStatic.getBytes32()).to.equal(expected2)
           })
 
           it('should be able to reset and change behaviors', async () => {
             const expected1 = 'this is a revert string'
-            mock.smocked.functions.getBytes32.will.revert.with(expected1)
+            mock.smocked.getBytes32.will.revert.with(expected1)
 
             await expect(mock.callStatic.getBytes32()).to.be.revertedWith(
               expected1
@@ -609,13 +630,13 @@ describe('[hardhat] smock: function manipulation tests', () => {
 
             const expected2 =
               '0x0000000000000000000000000000000000000000000000000000000000000000'
-            mock.smocked.functions.getBytes32.reset()
+            mock.smocked.getBytes32.reset()
 
             expect(await mock.callStatic.getBytes32()).to.equal(expected2)
 
             const expected3 =
               '0x4321432143214321432143214321432143214321432143214321432143214321'
-            mock.smocked.functions.getBytes32.will.return.with(expected3)
+            mock.smocked.getBytes32.will.return.with(expected3)
 
             expect(await mock.callStatic.getBytes32()).to.equal(expected3)
           })

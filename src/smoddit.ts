@@ -1,39 +1,24 @@
 /* Imports: External */
 import hre from 'hardhat'
-import { Provider } from '@ethersproject/providers'
 import { ethers, Contract, ContractInterface } from 'ethers'
 
 /* Imports: Internal */
 import { engine } from './hook'
-import { ModifiableContract, Smoddit } from '../../types/smock.types'
+import { ModifiableContract } from './types'
 import { smockify } from './smockit'
-import { makeRandomAddress } from '../../utils'
+import { makeRandomAddress } from './utils'
+import { Smoddit } from './types'
 
-export type TSmodSpec = string | Object
-
-export interface TSmodOptions {
-  address?: string
-  provider?: Provider
-}
-
-export interface TSmodHost extends Contract, ModifiableContract {}
-
-export const smoddify = (contract: TSmodHost): void => {
-  smockify(contract)
-  ;(contract.smocked as any).internal = {
-    functions: {},
+export const smoddify = (contract: ModifiableContract): void => {
+  contract.smodded = {
+    functions: {
+      fallback: {} as any,
+    },
     variables: {},
   }
 }
 
-export const smoddit: Smoddit<
-  TSmodSpec,
-  TSmodOptions,
-  TSmodHost
-> = async (
-  spec,
-  options = {}
-) => {
+export const smoddit: Smoddit = async (spec, options = {}) => {
   if (typeof spec === 'string') {
     try {
       spec = await (hre as any).ethers.getContractFactory(spec)
@@ -59,7 +44,7 @@ export const smoddit: Smoddit<
     options.address || makeRandomAddress(),
     iface,
     options.provider || (spec as any).provider || (hre as any).ethers.provider
-  ) as TSmodHost
+  ) as ModifiableContract
 
   smoddify(contract)
 

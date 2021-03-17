@@ -1,5 +1,5 @@
-import BN = require('bn.js')
-import { ModifiableContract, MockContract } from '../../types/smock.types'
+import BN from 'bn.js'
+import { ModifiableContract, MockContract } from './types'
 
 export class VM4xEngine {
   private evm: any
@@ -32,11 +32,13 @@ export class VM4xEngine {
     this.evm = undefined
   }
 
-  public attachSmockContract(mock: MockContract): void {
+  public attachSmockContract(mock: MockContract | ModifiableContract): void {
     this.smocks[mock.smocked.id] = mock
   }
 
-  public detatchSmockContract(mock: MockContract | string): void {
+  public detatchSmockContract(
+    mock: MockContract | ModifiableContract | string
+  ): void {
     if (typeof mock === 'string') {
       delete this.smocks[mock]
     } else {
@@ -52,7 +54,7 @@ export class VM4xEngine {
     address: string
   ): MockContract | ModifiableContract | undefined {
     for (const smock of Object.values(this.smocks)) {
-      if (smock.smocked.address.toLowerCase() === address.toLowerCase()) {
+      if (smock.address.toLowerCase() === address.toLowerCase()) {
         return smock
       }
     }

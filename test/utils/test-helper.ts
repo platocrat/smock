@@ -4,7 +4,7 @@ import { glob } from 'glob'
 
 export const getTestHelperJSON = (name: string): any => {
   const artifactPaths = glob.sync(
-    path.resolve(__dirname, './temp/artifacts') + `/**/${name}.json`
+    path.resolve(__dirname, '../temp/artifacts') + `/**/${name}.json`
   )
 
   if (artifactPaths.length === 0) {

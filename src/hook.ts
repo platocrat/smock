@@ -1,7 +1,7 @@
 const locals = require('import-locals')
 locals.export('@nomiclabs/ethereumjs-vm/dist/runTx', 'evm_1')
 
-import { VM4xEngine } from '../../engine/vm4.x/engine'
+import { VM4xEngine } from './engine'
 
 if (!global.smengines) {
   global.smengines = {}
